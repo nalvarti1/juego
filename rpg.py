@@ -131,6 +131,7 @@ class Personaje(Entidad):
         else:
             print(f"{self.nombre} no tiene {pocion.nombre} en el inventario.")
 
+#Note que es poco practica esta parte pero no quise que mi codigo llegase a parecerse a alguno otro, vi que muchos lo implementaron de formas parecidas.
 class Enemigo(Entidad):
     def __init__(self, nombre, salud, energia, ataque_basico, experiencia):
         super().__init__(nombre, salud, energia, ataque_basico)
@@ -152,4 +153,63 @@ class Enemigo(Entidad):
 
     def falta_energia(self, habilidad):
         print(f"{self.nombre} no tiene suficiente energía para usar {habilidad.nombre}.")
-      
+
+
+#Lo coloque aqui todo debido que no me resultaba la implementacion en el archivo main.py  :(
+
+
+#Los valores en esta seccion seran asignados en la partida.
+
+#Crear personaje
+personaje=Personaje("Aventurero", 100, 100, 25) #(nombre, salud, energia, ataque_basico)
+
+#Crear habilidades
+habilidad_1=Habilidad("Ataque Fuego", 30, 20) #(nombre, ataque, energia_requerida)
+habilidad_2=Habilidad("Golpe Rapido", 15, 10)
+habilidad_3=Habilidad("Curacion", -40, 20)
+
+#Aprender habilidades
+personaje.aprender_habilidad(habilidad_1)
+personaje.aprender_habilidad(habilidad_2)
+personaje.aprender_habilidad(habilidad_3)
+
+#Crear enemigos
+enemigo_1=Enemigo("Huargo", 70, 65, 30, 45) #(nombre, salud, energia, ataque_basico)
+enemigo_2=Enemigo("Golem", 150, 110, 45, 90)
+
+#Combate
+personaje.atacar(enemigo_1)
+enemigo_1.usar_habilidad(habilidad_1, personaje)
+personaje.descansar()
+personaje.subir_nivel()
+
+#Agregar objetos al inventario
+objeto_1=Objeto("Espada", "Espada larga.") #(nombre, descripcion)
+objeto_2=Objeto("Escudo", "Escudo fuerte.")
+personaje.agregar_objeto(objeto_1)
+personaje.agregar_objeto(objeto_2)
+
+#Eliminar objeto del inventario
+personaje.eliminar_objeto(objeto_1)
+
+#Usar pociones
+pocion_salud=Pocion("Pocion de Salud", "Restaura la salud.", "salud", 1) #(nombre, descripcion, tipo, nivel)
+pocion_energia=Pocion("Pocion de Energia", "Restaura la energia.", "energia", 3)
+personaje.agregar_objeto(pocion_salud)
+personaje.agregar_objeto(pocion_energia)
+personaje.usar_pocion(pocion_salud)
+personaje.usar_pocion(pocion_energia)
+
+#Comprar objetos y pociones en la tienda
+tienda=Tienda()
+tienda.inventario_objetos.append(objeto_1)
+tienda.inventario_objetos.append(objeto_2)
+tienda.inventario_pociones.append(pocion_salud)
+tienda.inventario_pociones.append(pocion_energia)
+
+dinero=80
+if objeto_1 in tienda.inventario_objetos and dinero >= 40:
+    tienda.inventario_objetos.remove(objeto_1)
+    personaje.agregar_objeto(objeto_1)
+    dinero=dinero-40
+    print(f"{personaje.nombre} compro {objeto_1.nombre}.")
